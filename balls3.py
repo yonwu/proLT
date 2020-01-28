@@ -43,13 +43,13 @@ class Player:
     def move(self):
         move_x, move_y = 0, 0
 
-        if pygame.key.get_pressed()[pygame.K_DOWN] == True:
+        if pygame.key.get_pressed()[pygame.K_DOWN]:
             move_y = 2
-        if pygame.key.get_pressed()[pygame.K_UP] == True:
+        if pygame.key.get_pressed()[pygame.K_UP]:
             move_y = -2
-        if pygame.key.get_pressed()[pygame.K_LEFT] == True:
+        if pygame.key.get_pressed()[pygame.K_LEFT]:
             move_x = -2
-        if pygame.key.get_pressed()[pygame.K_RIGHT] == True:
+        if pygame.key.get_pressed()[pygame.K_RIGHT]:
             move_x = 2
 
         min__player_y = self.radius
@@ -90,12 +90,12 @@ def main():
                 done = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_z:
-                    randomBall = random.choice(balls)
-                    randomBall.randomize()
+                    random_ball = random.choice(balls)
+                    random_ball.randomize()
                 elif event.key == pygame.K_a:
-                    newBall = Ball(50, 50, 25)
-                    newBall.randomize()
-                    balls.append(newBall)
+                    new_ball = Ball(50, 50, 25)
+                    new_ball.randomize()
+                    balls.append(new_ball)
 
         # Move a player
         player.move()
@@ -122,10 +122,10 @@ def main():
 
 def constrain(small, value, big):
     """Return a new value which isn't smaller than small or larger than big"""
-    list = [small, value, big]
-    list.sort()
+    value_list = [small, value, big]
+    value_list.sort()
 
-    return list[1]
+    return value_list[1]
 
 
 if __name__ == "__main__":
