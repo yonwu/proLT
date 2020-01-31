@@ -73,46 +73,34 @@ def repack(boxes):
             item_int.append(item)
         else:
             item_regular.append(item)
-    print(item_regular)
-    print(item_int)
     item_rearrange = item_regular + item_int
     print(item_rearrange)
+    process_item = []
+    for item in item_rearrange:
+        process_item.append(item)
     for box in boxes_rearrange:
-        items_remian = item_rearrange
-        for item in items_remian:
-            if box.add(item):
-                item_rearrange.remove(item)
+        for item in process_item[:]:
+            if box.free() >= check_item_size(item):
+                box.add(item)
+                process_item.remove(item)
+            else:
+                continue
 
 
 if __name__ == "__main__":
-    b = Box(5)
-    print(b.add([10, 11, 12]))
-    print(b.add('abc'))
-    print(b.add(9))
-    print(b.add('x'))
-    print(b.empty())
-    b1 = IntBox(2)
-    print(b1.add('1'))
-    print(b1.add(1))
-    print(b1.add(2))
-    print(b1.empty())
+    b2 = Box(2)
+    b2.add(1)
 
-    b2 = Box(5)
-    print(b2.add([10, 11, 12]))
-    print(b2.add(9))
-    print(b2.add('x'))
-    b3 = IntBox(2)
-    print(b3.add(1))
-    print(b3.add(2))
-    b4 = Box(5)
-    print(b4.add('abc'))
-    print(b4.add(9))
-    print(b4.add('x'))
+    b3 = IntBox(1)
+    b3.add(2)
+
+    b4 = Box(1)
+    b4.add('a')
 
     list_of_box = [b2, b3, b4]
     print('Try to repack the list of boxes')
     repack(list_of_box)
     print("Check what's in every boxes in the list now")
-    print('b =', b2.empty())
-    print('bb =', b3.empty())
-    print('bbb =', b4.empty())
+    print('b2 =', b2.empty())
+    print('b3 =', b3.empty())
+    print('b4 =', b4.empty())
