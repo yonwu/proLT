@@ -74,15 +74,11 @@ def repack(boxes):
         else:
             item_regular.append(item)
     item_rearrange = item_regular + item_int
-    print(item_rearrange)
-    process_item = []
-    for item in item_rearrange:
-        process_item.append(item)
     for box in boxes_rearrange:
-        for item in process_item[:]:
+        for item in item_rearrange[:]:
             if box.free() >= check_item_size(item):
                 box.add(item)
-                process_item.remove(item)
+                item_rearrange.remove(item)
             else:
                 continue
 
