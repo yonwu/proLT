@@ -6,11 +6,11 @@ class Box:
 
     def add(self, item):
         item_size = check_item_size(item)
-        if self.free() >= item_size:
+        if self.free_space() >= item_size:
             self.item_list.append(item)
             return True
         else:
-            return "Fail"
+            return False
 
     def empty(self):
         item_in_box = []
@@ -21,7 +21,7 @@ class Box:
     def count(self):
         return len(self.item_list)
 
-    def free(self):
+    def free_space(self):
         free_space = self.capacity
         free_space = free_space - self.occupied_space()
         return free_space
@@ -39,7 +39,7 @@ class Box:
 class IntBox(Box):
     def add(self, item):
         item_size = check_item_size(item)
-        if self.free() >= item_size and isinstance(item, int):
+        if self.free_space() >= item_size and isinstance(item, int):
             self.item_list.append(item)
             return True
         else:
@@ -74,9 +74,11 @@ def repack(boxes):
         else:
             item_regular.append(item)
     item_rearrange = item_regular + item_int
+    print(item_rearrange)
+    print(item_rearrange[:])
     for box in boxes_rearrange:
         for item in item_rearrange[:]:
-            if box.free() >= check_item_size(item):
+            if box.free_space() >= check_item_size(item):
                 box.add(item)
                 item_rearrange.remove(item)
             else:
