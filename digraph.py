@@ -27,9 +27,8 @@ class Digraph:
     # the idea is to find the transitive relation nodes for each vertex, and then use intersection theory in set
     # to check whether the graph is transitive or not transitive
     def is_transitive(self):
-        vertex_key = self.vertices()
         vertex_value = []
-        for key in vertex_key:
+        for key in self.vertices():
             values = set()
             for x in self.edges():
                 if key in x:
