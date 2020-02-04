@@ -1,3 +1,6 @@
+from itertools import combinations
+
+
 class Digraph:
     def __init__(self, vertices=None, edges=None):
 
@@ -34,13 +37,16 @@ class Digraph:
                 if key in x:
                     values.update(x)
             vertex_value.append(values)
-        tmp = vertex_value[1]
-        for x in vertex_value:
-            tmp = tmp & x
-        if len(tmp) != 0:
-            return True
-        else:
-            return False
+        vertex_value_position = list(range(0, len(vertex_value)))
+        print(vertex_value_position)
+        list_three_combination = list(combinations(vertex_value_position, 3))
+        print(list_three_combination)
+        for x in list_three_combination:
+            print(x)
+            if vertex_value[x[0]] & vertex_value[x[1]] == vertex_value[x[2]]:
+                return True
+        return False
+
 
 
 # add a print result function to make the test part easier to read
@@ -88,11 +94,11 @@ if __name__ == "__main__":
     print("After removing vertex 3:")
     print_result(d6)
     print("Test of transitive.")
-    d7 = Digraph(edges=[(1, 2), (1, 3), (2, 3), (3, 3), (4, 5)], vertices=[1, 2, 3, 4, 5])
-    print("A graph that is not transitive:")
+    d7 = Digraph(edges=[(1, 2), (2, 3), (1, 3), (1, 4)], vertices=[1, 2, 3, 4, 5])
+    print("A graph that is transitive:")
     print_result(d7)
     print(d7.is_transitive())
-    d8 = Digraph(edges=[(1, 2), (1, 3), (2, 3), (3, 3), (3, 4)], vertices=[1, 2, 3, 4])
-    print("A graph that is transitive:")
+    d8 = Digraph(edges=[(1, 2), (2, 3), (3, 3), (3, 4)], vertices=[1, 2, 3, 4])
+    print("A graph that is not transitive:")
     print_result(d8)
     print(d8.is_transitive())
