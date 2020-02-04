@@ -30,23 +30,12 @@ class Digraph:
     # the idea is to find the transitive relation nodes for each vertex, and then use intersection theory in set
     # to check whether the graph is transitive or not transitive
     def is_transitive(self):
-        vertex_value = []
-        for key in self.vertices():
-            values = set()
-            for x in self.edges():
-                if key in x:
-                    values.update(x)
-            vertex_value.append(values)
-        vertex_value_position = list(range(0, len(vertex_value)))
-        print(vertex_value_position)
+        vertex_value_position = list(range(0, len(self.edges())))
         list_three_combination = list(combinations(vertex_value_position, 3))
-        print(list_three_combination)
         for x in list_three_combination:
-            print(x)
-            if vertex_value[x[0]] & vertex_value[x[1]] == vertex_value[x[2]]:
+            if set(self.edges()[x[0]]) ^ set(self.edges()[x[1]]) == set(self.edges()[x[2]]):
                 return True
         return False
-
 
 
 # add a print result function to make the test part easier to read
