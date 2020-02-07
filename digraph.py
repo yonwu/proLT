@@ -22,20 +22,20 @@ class Digraph:
         self.set_vertices.update([source, dest])
 
     # use .remove and .difference_update() in set to remove vertices and related edges
-    def remove_vertices(self, vertex):
+    def remove_vertex(self, vertex):
         self.set_vertices.remove(vertex)
         tmp_edges = self.edges()
         self.set_edges.difference_update(x for x in tmp_edges if vertex in x)
 
-    # the idea is to find the transitive relation nodes for each vertex, and then use intersection theory in set
-    # to check whether the graph is transitive or not transitive
     def is_transitive(self):
-        vertex_value_position = list(range(0, len(self.edges())))
-        list_three_combination = list(combinations(vertex_value_position, 3))
-        for x in list_three_combination:
-            if set(self.edges()[x[0]]) ^ set(self.edges()[x[1]]) == set(self.edges()[x[2]]):
-                return True
-        return False
+        for i in range(0, len(self.edges())):
+            for j in range(0, len(self.edges())):
+                if self.edges()[i][1] == self.edges()[j][0]:
+                    if (self.edges()[i][0], self.edges()[j][1]) in self.edges():
+                        continue
+                    else:
+                        return False
+        return True
 
 
 # add a print result function to make the test part easier to read
@@ -79,11 +79,11 @@ if __name__ == "__main__":
     d6 = Digraph(edges=[(1, 2), (1, 3), (2, 3), (3, 3)], vertices=[1, 2, 3, 4])
     print("Before removing vertex:")
     print_result(d6)
-    d6.remove_vertices(3)
+    d6.remove_vertex(3)
     print("After removing vertex 3:")
     print_result(d6)
     print("Test of transitive.")
-    d7 = Digraph(edges=[(1, 2), (2, 3), (1, 3), (1, 4)], vertices=[1, 2, 3, 4, 5])
+    d7 = Digraph(edges=[(2, 3), (1, 3), (1, 2), (2, 4), (1, 5)], vertices=[1, 2, 3, 4, 5])
     print("A graph that is transitive:")
     print_result(d7)
     print(d7.is_transitive())
@@ -91,3 +91,10 @@ if __name__ == "__main__":
     print("A graph that is not transitive:")
     print_result(d8)
     print(d8.is_transitive())
+    print("------------------")
+    d9 = Digraph(edges=[(1, 2), (2, 1), (1, 1), (2, 2)])
+    print(d9.is_transitive())
+    d10 = Digraph(edges=[(2, 3), (1, 3), (1, 2), (2, 4), (1, 5), (1, 4)], vertices=[1, 2, 3, 4, 5])
+    print("A graph that is transitive:")
+    print_result(d10)
+    print(d10.is_transitive())
