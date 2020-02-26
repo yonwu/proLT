@@ -60,3 +60,4 @@ for word in TO_SEARCH_LIST:
     search_in_dic(SORTED_WORD_DIC, word)
 end = timer()
 print(end - start)
+
