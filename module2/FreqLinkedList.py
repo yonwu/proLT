@@ -1,27 +1,27 @@
 class Node:
 
     def __init__(self, word):
-        self.word = word
-        self.frequency = 1
-        self.next = None
+        self._word = word
+        self._frequency = 1
+        self._next = None
 
     def get_word(self):
-        return self.word
+        return self._word
 
     def set_word(self, new_word):
-        self.word = new_word
+        self._word = new_word
 
     def get_frequency(self):
-        return self.frequency
+        return self._frequency
 
     def set_frequency(self, new_frequency):
-        self.frequency = new_frequency
+        self._frequency = new_frequency
 
     def get_next(self):
-        return self.next
+        return self._next
 
     def set_next(self, new_next):
-        self.next = new_next
+        self._next = new_next
 
 
 class FreqLinkedList:
@@ -33,7 +33,7 @@ class FreqLinkedList:
         current = self.head
         while current:
             print(current.get_word(), current.get_frequency())
-            current = current.next
+            current = current.get_next()
 
     def search_and_modify_frequency(self, item):
         current = self.head
@@ -44,10 +44,10 @@ class FreqLinkedList:
                 found = True
                 current.set_frequency(current.get_frequency() + 1)
             else:
-                if current.word > item:
+                if current.get_word() > item:
                     stop = True
                 else:
-                    current = current.next
+                    current = current.get_next()
 
         return found
 
@@ -62,7 +62,7 @@ class FreqLinkedList:
                 stop = True
             else:
                 previous = current
-                current = current.next
+                current = current.get_next()
 
         if not found:
             temp = Node(item)
