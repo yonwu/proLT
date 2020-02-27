@@ -76,7 +76,6 @@ class FreqLinkedList:
     def filterWords(self, frequency):
         current = self.head
         previous = None
-        found = False
         while current:
             if current.get_frequency() < frequency:
                 if previous is None:
