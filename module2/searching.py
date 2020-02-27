@@ -1,12 +1,12 @@
-from timeit import default_timer as timer
 from collections import deque
+from timeit import default_timer as timer
 
 SORTED_WORD_LIST = [line.rstrip('\n') for line in open('./sortedWordList.txt')]
 TO_SEARCH_LIST = [line.rstrip('\n') for line in open('./toSearchFor.txt')]
 SORTED_WORD_DEQUE = deque(line.rstrip('\n') for line in open('./sortedWordList.txt'))
 SORTED_WORD_DIC = {}
 for index, item in enumerate(SORTED_WORD_LIST):
-    SORTED_WORD_DIC[index] = SORTED_WORD_LIST[index]
+    SORTED_WORD_DIC[item] = index
 
 
 def sequential_search_index(word_list, word):
@@ -48,16 +48,37 @@ def binary_check(word_list, word):
 
 def search_in_dic(word_list, word):
     for key, value in word_list.items():
-        if value == word:
-            return key
+        if key == word:
+            return value
         else:
             return -1
-
-
-print("search in dic, , with words stored in dictionary")
+'''
+print("search in dictionary")
 start = timer()
 for word in TO_SEARCH_LIST:
     search_in_dic(SORTED_WORD_DIC, word)
 end = timer()
 print(end - start)
 
+print("search in list uses indexing")
+start = timer()
+for word in TO_SEARCH_LIST:
+    sequential_search_index(SORTED_WORD_LIST, word)
+end = timer()
+print(end - start)
+
+print("search in list using enumerate")
+start = timer()
+for word in TO_SEARCH_LIST:
+    sequential_search_enumerate(SORTED_WORD_LIST, word)
+end = timer()
+print(end - start)
+
+
+print("search in deque")
+start = timer()
+for word in TO_SEARCH_LIST:
+    binary_search(SORTED_WORD_LIST, word)
+end = timer()
+print(end - start)
+'''
