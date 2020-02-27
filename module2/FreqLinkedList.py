@@ -75,22 +75,21 @@ class FreqLinkedList:
 
     def filterWords(self, frequency):
         current = self.head
-        while current:
-            self.remove(frequency)
-            current = current.next
-
-    def remove(self, frequency):
-        current = self.head
         previous = None
         found = False
-        while not found:
+        while current:
             if current.get_frequency() < frequency:
-                found = True
+                if previous is None:
+                    self.head = current.get_next()
+                    current = self.head
+                else:
+                    previous.set_next(current.get_next())
+                    current = previous.get_next()
             else:
                 previous = current
                 current = current.get_next()
 
-        if previous is None:
-            self.head = current.get_next()
-        else:
-            previous.set_next(current.get_next())
+
+
+
+
