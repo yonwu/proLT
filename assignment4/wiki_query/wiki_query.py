@@ -10,7 +10,7 @@ def string_item(item):
 
 parser = argparse.ArgumentParser(description='Mining Wikipedia.')
 
-parser.add_argument('-item', required=True, type=string_item, nargs='+', help='handle of the user')
+parser.add_argument('-item', required=True, type=string_item, nargs='+', help='contend to be searched')
 
 args = parser.parse_args()
 
@@ -24,7 +24,7 @@ try:
     soup = BeautifulSoup(cl_site, "html.parser")
     paragraphs = soup.select("p")
     for para in paragraphs:
-        text = f"{para.text}"
+        text = para.text
         print(text)
 except HTTPError:
     print("No such wiki content")
