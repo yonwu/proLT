@@ -68,8 +68,6 @@ def tag_sentence(input_text, model, vec):
 
 
 def print_tagged_sent(tagged_sent, if_text, file_name):
-    for token in tagged_sent:
-        result = f"{token[0]}\t{token[1]}".expandtabs(15)
 
     if if_text:
         new_file = open(file_name + ".tag", "w")
