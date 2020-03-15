@@ -1,0 +1,11 @@
+this           PRON
+is             AUX
+a              DET
+glass          NOUN
+.              PUNCT
+I              PRON
+like           VERB
+to             PART
+drink          VERB
+water          NOUN
+.              PUNCT

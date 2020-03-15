@@ -1,5 +1,6 @@
 from sklearn.feature_extraction import DictVectorizer
 
+
 def load_txt(file):
     X, Y = [], []
     with open(file, "r") as infile:
@@ -20,6 +21,7 @@ def load_txt(file):
             Y.append(tags)
 
     return X, Y
+
 
 def load_conllu(file):
     X, Y = [], []
@@ -44,6 +46,7 @@ def load_conllu(file):
 
     return X, Y
 
+
 def load_dataset(file):
     if file.endswith(".conllu"):
         try:
@@ -58,6 +61,7 @@ def load_dataset(file):
         except TabError:
             print("Tried to read .txt file, but did not find two columns.")
 
+
 def token_to_features(sent, i):
     word = sent[i]
 
@@ -70,7 +74,7 @@ def token_to_features(sent, i):
         'word.isdigit()': word.isdigit(),
     }
     if i > 0:
-        word1 = sent[i-1]
+        word1 = sent[i - 1]
         features.update({
             '-1:word.lower()': word1.lower(),
             '-1:word.istitle()': word1.istitle(),
@@ -79,8 +83,8 @@ def token_to_features(sent, i):
     else:
         features['BOS'] = True
 
-    if i < len(sent)-1:
-        word1 = sent[i+1]
+    if i < len(sent) - 1:
+        word1 = sent[i + 1]
         features.update({
             '+1:word.lower()': word1.lower(),
             '+1:word.istitle()': word1.istitle(),
@@ -91,6 +95,7 @@ def token_to_features(sent, i):
 
     return features
 
+
 def prepare_data_for_training(X, Y):
     X_out, Y_out = [], []
     for i, sent in enumerate(X):
@@ -100,6 +105,7 @@ def prepare_data_for_training(X, Y):
             Y_out.append(Y[i][j])
 
     return X_out, Y_out
+
 
 def vectorize(X):
     vec = DictVectorizer()

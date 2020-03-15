@@ -4,11 +4,12 @@ import numpy as np
 import pickle
 import spacy
 import time
+import os
 
 nlp = spacy.load("en_core_web_sm")
 
-def fit_and_report(X, Y, cross_val = True, n_folds=5):
 
+def fit_and_report(X, Y, cross_val=True, n_folds=5):
     svm = LinearSVC()
 
     if cross_val:
@@ -18,7 +19,7 @@ def fit_and_report(X, Y, cross_val = True, n_folds=5):
         print(f"{n_folds}-fold cross-validation results over training set:\n")
         print("Fold\tScore".expandtabs(15))
         for i in range(n_folds):
-            print(f"{i+1}\t{scores[i]:.3f}".expandtabs(15))
+            print(f"{i + 1}\t{scores[i]:.3f}".expandtabs(15))
         print(f"Average\t{np.mean(scores):.3f}".expandtabs(15))
 
     print("Fitting model.")
@@ -29,10 +30,12 @@ def fit_and_report(X, Y, cross_val = True, n_folds=5):
 
     return svm
 
+
 def save_model(model_and_vec, output_file):
     print(f"Saving model to {output_file}.")
     with open(output_file, "wb") as outfile:
         pickle.dump(model_and_vec, outfile)
+
 
 def load_model(output_file):
     print(f"Loading model from {output_file}.")
@@ -41,7 +44,16 @@ def load_model(output_file):
 
     return model, vec
 
-def tag_sentence(sentence, model, vec):
+
+def tag_sentence(input_text, model, vec):
+    if os.path.isfile(input_text):
+        with open(input_text, "r") as infile:
+            file_name = input_text.split(".")[0]
+            sentence, if_text = infile.read().replace('\n', ''), True
+    else:
+        file_name = None
+        sentence, if_text = input_text, False
+
     doc = nlp(sentence)
     tokenized_sent = [token.text for token in doc]
     featurized_sent = []
@@ -52,9 +64,19 @@ def tag_sentence(sentence, model, vec):
     labels = model.predict(featurized_sent)
     tagged_sent = list(zip(tokenized_sent, labels))
 
-    return tagged_sent
+    return tagged_sent, if_text, file_name
 
-def print_tagged_sent(tagged_sent):
+
+def print_tagged_sent(tagged_sent, if_text, file_name):
     for token in tagged_sent:
-        print(f"{token[0]}\t{token[1]}".expandtabs(15))
+        result = f"{token[0]}\t{token[1]}".expandtabs(15)
 
+    if if_text:
+        new_file = open(file_name + ".tag", "w")
+        for token in tagged_sent:
+            result = f"{token[0]}\t{token[1]}".expandtabs(15) + "\n"
+            new_file.write(result)
+        new_file.close()
+    else:
+        for token in tagged_sent:
+            print(f"{token[0]}\t{token[1]}".expandtabs(15))
