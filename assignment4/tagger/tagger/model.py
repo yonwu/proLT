@@ -8,7 +8,7 @@ import time
 import os
 from sklearn.metrics import classification_report
 import pandas
-from sklearn.preprocessing import MultiLabelBinarizer
+
 
 nlp = spacy.load("en_core_web_sm")
 

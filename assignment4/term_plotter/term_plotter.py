@@ -1,6 +1,4 @@
 import argparse
-import os
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
