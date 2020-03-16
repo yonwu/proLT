@@ -17,8 +17,14 @@ def run(args):
     elif mode == "tag":
         print(f"Tagging text using pretrained model: {config['train_file']}.")
         svm, vec = model.load_model(config["model_file"])
-        tagged_sent, if_file, file_name = model.tag_sentence(args.text, svm, vec)
+        sequence, if_file, file_name = model.check_input_text(args.text)
+        tagged_sent = model.tag_sequence(sequence, svm, vec)
         model.print_tagged_sent(tagged_sent, if_file, file_name)
+    elif mode == "eval":
+        print(f"Evaluating model on: {config['eval_file']}.")
+        svm, vec = model.load_model(config["model_file"])
+        model.eval_model(args.gold, svm, vec)
+
     else:
         print(f"{args.mode} is an incompatible mode. Must be either 'train' or 'tag'.")
 
@@ -39,6 +45,11 @@ if __name__ == '__main__':
     """
                         Tags a sentence string.
                         Can only be called if '--mode tag' is specified.
+                        """)
+    PARSER.add_argument('--gold', metavar='G', type=str, help=
+                        """
+                        Path to a gold-standard POS-tagging file.
+                        Can only be called if '--mode eval' is specified.
                         """)
     PARSER.add_argument('--config', metavar='C', type=str, help=
     """
