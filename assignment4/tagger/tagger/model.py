@@ -9,7 +9,6 @@ import os
 from sklearn.metrics import classification_report
 import pandas
 
-
 nlp = spacy.load("en_core_web_sm")
 
 
@@ -88,28 +87,16 @@ def check_input_text(input_text):
 
 
 def eval_model(gold_file, model, vec):
-    sentences, gold_tags = extract_sentences_and_tags_from_gold(gold_file)
+    toked_sentence, gold_tags = extract_tokens_and_tags_from_gold(gold_file)
 
-    list_of_predicted_tags = []
-    for sentence in sentences:
-        tags = []
-        tagged_sent = tag_sequence(sentence, model, vec)
-        for ts in tagged_sent[:]:
-            tags.append(ts[1])
-        list_of_predicted_tags.append(tags)
-    true_tags = []
-    test_tags = []
-    for i in range(0, len(sentences) - 1):
-        if len(list_of_predicted_tags[i]) == len(gold_tags[i]):
-            true_tags.append(gold_tags[i])
-            test_tags.append(list_of_predicted_tags[i])
-        else:
-            continue
+    featurized_sent = []
+    for i, token in enumerate(toked_sentence):
+        featurized_sent.append(token_to_features(toked_sentence, i))
 
-    predicted = [x for j in test_tags for x in j]
-    gold = [x for j in true_tags for x in j]
+    featurized_sent = vec.transform(featurized_sent)
+    predicted = model.predict(featurized_sent)
 
-    c_matrix_report = classification_report(gold, predicted, output_dict=True)
+    c_matrix_report = classification_report(gold_tags, predicted, output_dict=True)
 
     df = pandas.DataFrame(c_matrix_report).transpose()
     print(df)
@@ -131,3 +118,20 @@ def extract_sentences_and_tags_from_gold(gold_file):
 
     return sentences, list_of_tags
 
+
+def extract_tokens_and_tags_from_gold(gold_file):
+    X, Y = load_dataset(gold_file)
+
+    token_sentences = []
+    for s in X:
+        token_sentences.append(s)
+
+    toked_sentence = [x for j in token_sentences for x in j]
+
+    list_of_tags = []
+    for t in Y:
+        list_of_tags.append(t)
+
+    gold_tags = [x for j in list_of_tags for x in j]
+
+    return toked_sentence, gold_tags
