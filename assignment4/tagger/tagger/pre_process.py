@@ -112,3 +112,11 @@ def vectorize(X):
     X_out = vec.fit_transform(X)
 
     return X_out, vec
+
+
+def sent2features(sent):
+    return [token_to_features(sent, i) for i in range(len(sent))]
+
+
+def sent2labels(sent):
+    return [label for label in sent]

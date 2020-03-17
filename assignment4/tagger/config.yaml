@@ -1,6 +1,6 @@
 # tagger config
 train_file: "/Users/yonwu/NLP_Course/UD_English-EWT/en_ewt-ud-train.conllu"
 eval_file: "/Users/yonwu/NLP_Course/UD_English-EWT/en_ewt-ud-test.conllu"
-model_file: "./svm_tagger.pickle"
+model_file: "./model_tagger.pickle"
 crossval: True
 n_folds: 5
