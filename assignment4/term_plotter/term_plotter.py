@@ -54,7 +54,7 @@ def process_input(args):
     if args.path:
         path = args.path
     else:
-        path = os.getcwd()
+        path = os.getcwd() + "/us_presidential_speeches/"
 
     if args.output:
         output = args.output
