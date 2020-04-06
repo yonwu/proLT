@@ -1,0 +1,22 @@
+#Rooms
+room LK
+room Reading_Room
+room BedRoom_1
+room BedRoom_2
+room BathRoom
+room Balcony
+
+#Doors
+door N1-S open LK ReadingRoom
+door N2-S open LK BedRoom1
+door N3-S open LK BedRoom2
+door E-W locked LK Bathroom
+door W-E open Balcony
+
+#Items
+item Macbook LK MOVE
+item TV  LK STATIONARY
+item Key LK USE
+
+#Start position
+start LK

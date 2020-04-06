@@ -43,7 +43,7 @@ class Room:
         self.item = []
         self.room_name = room_name
 
-    def set_door(self, doors):
+    def set_doors(self, doors):
         for door in doors:
             self.doors.append(door)
 
@@ -55,7 +55,7 @@ class Room:
             if (self.room_name, direct) in x.door_side.items():
                 return x
 
-    def set_item(self, item):
+    def set_items(self, item):
         for i in item:
             self.item.append(i)
 
@@ -173,15 +173,10 @@ class Player:
         print("(─‿‿─)")
         print([x.get_name() for x in self.item])
 
-    @staticmethod
-    def quit_game():
-        print_config('GameOver.txt')
-        sys.exit()
-
     def take_action(self, command):
         action = command.split(" ")
         if action[0] == "quit":
-            self.quit_game()
+            Game.quit_game()
         elif action[0] == "go":
             self.go(action[1])
         elif action[0] == "commands":
@@ -198,13 +193,54 @@ class Player:
             self.release(action[1])
 
 
-def print_config(file):
-    with open(file, 'r') as f:
-        print(f.read())
+class Game:
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def print_config(file):
+        with open(file, 'r') as f:
+            print(f.read())
+
+    @staticmethod
+    def quit_game():
+        Game.print_config('GameOver.txt')
+        sys.exit()
+
+    @staticmethod
+    def get_config_from_file(file):
+        with open(file, "r") as infile:
+            sents = infile.read().split("\n\n")
+            if sents[-1] == "":
+                sents = sents[:-1]
+            game_config = {}
+            for sent in sents:
+                lines = sent.split("\n")
+                for line in lines:
+                    if line.startswith("#"):
+                        key = line.strip("#")
+                        game_config[key] = []
+                        continue
+
+                    line = line.strip().split("\t")
+                    line = line[0].split(" ")[1:]
+                    game_config[key].append(line)
+
+        return game_config
 
 
 if __name__ == "__main__":
-    print_config('gameConfiguration.txt')
+    Game.print_config('gameConfiguration.txt')
+
+    game_config = Game.get_config_from_file('configuration.txt')
+    rooms_config = game_config["Rooms"]
+    doors_config = game_config["Doors"]
+    items_config = game_config["Items"]
+    start_position = game_config["Start position"]
+
+    print(rooms_config, doors_config, items_config, start_position)
+
+
 
     new_player = Player()
 
@@ -215,23 +251,23 @@ if __name__ == "__main__":
     Door_LK_Balcony = Door("LK", "W", "Balcony", "E", "open")
 
     LK = Room("LK")
-    LK.set_item([StationaryStuff("TV"), MoveStuff("Macbook"), UseStuff("Key")])
-    LK.set_door([Door_LK_Reading, Door_LK_BedRoom1, Door_LK_BedRoom2, Door_LK_BathRoom, Door_LK_Balcony])
+    LK.set_items([StationaryStuff("TV"), MoveStuff("Macbook"), UseStuff("Key")])
+    LK.set_doors([Door_LK_Reading, Door_LK_BedRoom1, Door_LK_BedRoom2, Door_LK_BathRoom, Door_LK_Balcony])
 
     Reading_Room = Room("Reading_Room")
-    Reading_Room.set_door([Door_LK_Reading])
+    Reading_Room.set_doors([Door_LK_Reading])
 
     BedRoom1 = Room("BedRoom1")
-    BedRoom1.set_door([Door_LK_BedRoom1])
+    BedRoom1.set_doors([Door_LK_BedRoom1])
 
     BedRoom2 = Room("BedRoom2")
-    BedRoom2.set_door([Door_LK_BedRoom2])
+    BedRoom2.set_doors([Door_LK_BedRoom2])
 
     BathRoom = Room("BathRoom")
-    BathRoom.set_door([Door_LK_BathRoom])
+    BathRoom.set_doors([Door_LK_BathRoom])
 
     Balcony = Room("Balcony")
-    Balcony.set_door([Door_LK_Balcony])
+    Balcony.set_doors([Door_LK_Balcony])
 
     print("(─‿‿─)")
     print("Please type some command：")
