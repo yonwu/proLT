@@ -1,10 +1,12 @@
 import sys
+import argparse
 
 
 class Stuff:
-    def __init__(self, name):
+    def __init__(self, name, place):
         self.type = None
         self.name = name
+        self.place = place
 
     def get_type(self):
         return self.type
@@ -14,20 +16,20 @@ class Stuff:
 
 
 class StationaryStuff(Stuff):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, place):
+        super().__init__(name, place)
         self.type = "STATIONARY"
 
 
 class MoveStuff(Stuff):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, place):
+        super().__init__(name, place)
         self.type = "MOVE"
 
 
 class UseStuff(Stuff):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, place):
+        super().__init__(name, place)
         self.type = "USE"
 
 
@@ -90,20 +92,20 @@ class Player:
                          "commands",
                          "holding",
                          "quit"]
-        self.room = "LK"
+        self.room = None
 
     def go(self, direction):
         if direction in self.get_direct():
 
-            door = eval(self.room).get_door(direction)
+            door = self.room.get_door(direction)
             if door.status == "open":
-                print("Leave ", self.room)
-                current_room = self.room
+                print("Leave ", self.room.room_name)
+                current_room = self.room.room_name
                 for room in door.door_side.keys():
                     if room != current_room:
-                        self.room = room
+                        self.room = room_list[room]
                 print("(─‿‿─)")
-                print("Enter ", self.room)
+                print("Enter ", self.room.room_name)
             else:
                 print("(─‿‿─)")
                 print("The door is closed, please use a key to open it.")
@@ -113,13 +115,13 @@ class Player:
             print("ಥ_ಥ There are no doors towards", direction)
 
     def take(self, stuff):
-        item = eval(self.room).get_item(stuff)
+        item = self.room.get_item(stuff)
         if item.get_type() == "STATIONARY":
             print("(─‿‿─)")
             print(item.get_name(), " is STATIONARY, it cannot be taken ಥ_ಥ ")
         else:
             self.item.append(item)
-            eval(self.room).remove_item(item)
+            self.room.remove_item(item)
             print("(─‿‿─)")
             print("you have taken the following item with you --", item.get_name())
 
@@ -138,7 +140,7 @@ class Player:
     def release(self, stuff):
         item = self.get_item(stuff)
         self.remove(item)
-        eval(self.room).add_item(item)
+        self.room.add_item(item)
 
     def check_key(self):
         for x in [x.get_name() for x in self.item]:
@@ -150,7 +152,7 @@ class Player:
         if self.check_key():
             print("(─‿‿─)")
             print("Got the key")
-            eval(self.room).get_door(direction).status = "open"
+            self.room.get_door(direction).status = "open"
             self.go(direction)
         else:
             print("(─‿‿─)")
@@ -161,13 +163,13 @@ class Player:
         print(self.commands)
 
     def get_direct(self):
-        return eval(self.room).get_doors()
+        return self.room.get_doors()
 
     def show(self):
         print("(─‿‿─)")
-        print("You are now in ROOM", self.room)
+        print("You are now in ROOM", self.room.room_name)
         print("Here are doors towords", self.get_direct())
-        print("The following items are in this room,", eval(self.room).get_items())
+        print("The following items are in this room,", self.room.get_items())
 
     def holding(self):
         print("(─‿‿─)")
@@ -226,48 +228,71 @@ class Game:
                     line = line[0].split(" ")[1:]
                     game_config[key].append(line)
 
-        return game_config
+        rooms_config = [x[0] for x in list(game_config.values())[0]]
+        doors_config = list(game_config.values())[1]
+        for x in doors_config:
+            x[0] = x[0].split("-")
+
+        items_config = list(game_config.values())[2]
+
+        start_position = list(game_config.values())[3][0][0]
+
+        return rooms_config, doors_config, items_config, start_position
+
+    @staticmethod
+    def init_game(file):
+        rooms_config, doors_config, items_config, start_position = Game.get_config_from_file(file)
+
+        room_list = {}
+
+        for room in rooms_config:
+            room_list[room] = Room(room)
+
+        door_list = list()
+
+        for door_config in doors_config:
+            new_door = Door(room1=door_config[-2], direct1=door_config[0][0],
+                            room2=door_config[-1], direct2=door_config[0][1], status=door_config[1])
+            door_list.append(new_door)
+
+        item_list = list()
+
+        for item_config in items_config:
+            if item_config[2] == "MOVE":
+                new_item = MoveStuff(name=item_config[0], place=item_config[1])
+            elif item_config[2] == "STATIONARY":
+                new_item = StationaryStuff(name=item_config[0], place=item_config[1])
+            elif item_config[2] == "USE":
+                new_item = UseStuff(name=item_config[0], place=item_config[1])
+            item_list.append(new_item)
+
+        for room in room_list.values():
+            for door in door_list:
+                if room.room_name in door.door_side.keys():
+                    room.set_doors([door])
+            for item in item_list:
+                if room.room_name == item.place:
+                    room.set_items([item])
+            if room.room_name == start_position:
+                start_room = room
+
+        return room_list, start_room
 
 
 if __name__ == "__main__":
-    Game.print_config('gameConfiguration.txt')
 
-    game_config = Game.get_config_from_file('configuration.txt')
-    rooms_config = game_config["Rooms"]
-    doors_config = game_config["Doors"]
-    items_config = game_config["Items"]
-    start_position = game_config["Start position"]
+    parser = argparse.ArgumentParser(description='Text Game  LOCKDOWN CORONA')
 
-    print(rooms_config, doors_config, items_config, start_position)
+    parser.add_argument("file")
 
+    args = parser.parse_args()
+    file = args.file
+    Game.print_config('startGame.txt')
 
+    room_list, start_room = Game.init_game(file)
 
     new_player = Player()
-
-    Door_LK_Reading = Door("LK", "N1", "Reading_Room", "S", "open")
-    Door_LK_BedRoom1 = Door("LK", "N2", "BedRoom1", "S", "open")
-    Door_LK_BedRoom2 = Door("LK", "N3", "BedRoom2", "S", "closed")
-    Door_LK_BathRoom = Door("LK", "E", "BathRoom", "W", "open")
-    Door_LK_Balcony = Door("LK", "W", "Balcony", "E", "open")
-
-    LK = Room("LK")
-    LK.set_items([StationaryStuff("TV"), MoveStuff("Macbook"), UseStuff("Key")])
-    LK.set_doors([Door_LK_Reading, Door_LK_BedRoom1, Door_LK_BedRoom2, Door_LK_BathRoom, Door_LK_Balcony])
-
-    Reading_Room = Room("Reading_Room")
-    Reading_Room.set_doors([Door_LK_Reading])
-
-    BedRoom1 = Room("BedRoom1")
-    BedRoom1.set_doors([Door_LK_BedRoom1])
-
-    BedRoom2 = Room("BedRoom2")
-    BedRoom2.set_doors([Door_LK_BedRoom2])
-
-    BathRoom = Room("BathRoom")
-    BathRoom.set_doors([Door_LK_BathRoom])
-
-    Balcony = Room("Balcony")
-    Balcony.set_doors([Door_LK_Balcony])
+    new_player.room = start_room
 
     print("(─‿‿─)")
     print("Please type some command：")
