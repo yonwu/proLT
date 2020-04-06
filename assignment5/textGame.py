@@ -82,7 +82,7 @@ class Room:
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, start_room, room_list):
         self.item = []
         self.commands = ["go",
                          "take",
@@ -92,7 +92,8 @@ class Player:
                          "commands",
                          "holding",
                          "quit"]
-        self.room = None
+        self.room = start_room
+        self.room_list = room_list
 
     def go(self, direction):
         if direction in self.get_direct():
@@ -103,7 +104,7 @@ class Player:
                 current_room = self.room.room_name
                 for room in door.door_side.keys():
                     if room != current_room:
-                        self.room = room_list[room]
+                        self.room = self.room_list[room]
                 print("(─‿‿─)")
                 print("Enter ", self.room.room_name)
             else:
@@ -177,21 +178,22 @@ class Player:
 
     def take_action(self, command):
         action = command.split(" ")
-        if action[0] == "quit":
+        act = action[0].lower()
+        if act == "quit":
             Game.quit_game()
-        elif action[0] == "go":
+        elif act == "go":
             self.go(action[1])
-        elif action[0] == "commands":
+        elif act == "commands":
             self.get_commands()
-        elif action[0] == "holding":
+        elif act == "holding":
             self.holding()
-        elif action[0] == "take":
+        elif act == "take":
             self.take(action[1])
-        elif action[0] == "show":
+        elif act == "show":
             self.show()
-        elif action[0] == "open":
+        elif act == "open":
             self.open(action[1])
-        elif action[0] == "release":
+        elif act == "release":
             self.release(action[1])
 
 
@@ -278,30 +280,30 @@ class Game:
 
         return room_list, start_room
 
+    @staticmethod
+    def start_game(file):
+        room_list, start_room = Game.init_game(file)
+        new_player = Player(start_room=start_room, room_list=room_list)
+
+        print("(─‿‿─)")
+        print("Please type some command：")
+        while True:
+            command = input()
+            action = command.split(" ")
+
+            if action[0].lower() in new_player.commands and len(action) < 3:
+                new_player.take_action(command)
+            else:
+                print("I dont understand the command")
+                continue
+
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description='Text Game  LOCKDOWN CORONA')
-
     parser.add_argument("file")
-
     args = parser.parse_args()
     file = args.file
+
     Game.print_config('startGame.txt')
+    Game.start_game(file)
 
-    room_list, start_room = Game.init_game(file)
-
-    new_player = Player()
-    new_player.room = start_room
-
-    print("(─‿‿─)")
-    print("Please type some command：")
-    while True:
-        command = input()
-        action = command.split(" ")
-
-        if action[0] in new_player.commands and len(action) < 3:
-            new_player.take_action(command)
-        else:
-            print("I dont understand the command")
-            continue
