@@ -167,21 +167,27 @@ class Player:
                 return True
 
     def open(self, direction):
-        if self.room.get_door(direction).status == "closed" or self.room.get_door(direction).status == "unlocked":
-            self.room.get_door(direction).status = "open"
-            print("The door is open now, you can go through the door now")
-        elif self.room.get_door(direction).status == "locked":
-            print("The door is locked, try to find out the Key")
+        if direction in self.get_direct():
+            if self.room.get_door(direction).status == "closed" or self.room.get_door(direction).status == "unlocked":
+                self.room.get_door(direction).status = "open"
+                print("The door is open now, you can go through the door now")
+            elif self.room.get_door(direction).status == "locked":
+                print("The door is locked, try to find out the Key")
+        else:
+            print("no such door in this room: " ,direction)
 
     def unlock(self, direction):
-        if self.check_key():
-            print("(─‿‿─)")
-            print("Got the key")
-            self.room.get_door(direction).status = "unlocked"
-            print("The door is unlocked now, you can open it")
+        if direction in self.get_direct():
+            if self.check_key():
+                print("(─‿‿─)")
+                print("Got the key")
+                self.room.get_door(direction).status = "unlocked"
+                print("The door is unlocked now, you can open it")
+            else:
+                print("(─‿‿─)")
+                print("You dont have the key on you, try to find it")
         else:
-            print("(─‿‿─)")
-            print("You dont have the key on you, try to find it")
+            print("no such door in this room: ", direction)
 
     def get_commands(self):
         print("(─‿‿─)")
