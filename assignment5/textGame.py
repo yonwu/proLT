@@ -28,9 +28,10 @@ class MoveStuff(Stuff):
 
 
 class UseStuff(Stuff):
-    def __init__(self, name, place):
+    def __init__(self, name, place, purpose):
         super().__init__(name, place)
         self.type = "USE"
+        self.purpose = purpose
 
 
 class Door:
@@ -91,40 +92,51 @@ class Player:
                          "show",
                          "commands",
                          "holding",
-                         "quit"]
+                         "quit",
+                         "unlock",
+                         "eat"]
         self.room = start_room
         self.room_list = room_list
+        self.status = "tired"
 
     def go(self, direction):
-        if direction in self.get_direct():
+        if self.status == "energetic":
+            if direction in self.get_direct():
 
-            door = self.room.get_door(direction)
-            if door.status == "open":
-                print("Leave ", self.room.room_name)
-                current_room = self.room.room_name
-                for room in door.door_side.keys():
-                    if room != current_room:
-                        self.room = self.room_list[room]
-                print("(─‿‿─)")
-                print("Enter ", self.room.room_name)
+                door = self.room.get_door(direction)
+                if door.status == "open":
+                    print("Leave ", self.room.room_name)
+                    current_room = self.room.room_name
+                    for room in door.door_side.keys():
+                        if room != current_room:
+                            self.room = self.room_list[room]
+                    print("(─‿‿─)")
+                    print("Enter ", self.room.room_name)
+                else:
+                    print("(─‿‿─)")
+                    print("The door is closed, please try to open it.")
+                    print("ಥ_ಥ")
             else:
                 print("(─‿‿─)")
-                print("The door is closed, please use a key to open it.")
-                print("ಥ_ಥ")
+                print("ಥ_ಥ There are no doors towards", direction)
         else:
-            print("(─‿‿─)")
-            print("ಥ_ಥ There are no doors towards", direction)
+            print("player's status is--", self.status, "--you cannot move at all")
+            print("please eat something first")
 
     def take(self, stuff):
-        item = self.room.get_item(stuff)
-        if item.get_type() == "STATIONARY":
-            print("(─‿‿─)")
-            print(item.get_name(), " is STATIONARY, it cannot be taken ಥ_ಥ ")
+        if stuff in self.room.get_items():
+            item = self.room.get_item(stuff)
+            if item.get_type() == "STATIONARY":
+                print("(─‿‿─)")
+                print(item.get_name(), " is STATIONARY, it cannot be taken ಥ_ಥ ")
+            else:
+                self.item.append(item)
+                self.room.remove_item(item)
+                print("(─‿‿─)")
+                print("you have taken the following item with you --", item.get_name())
+                item.place = "player"
         else:
-            self.item.append(item)
-            self.room.remove_item(item)
-            print("(─‿‿─)")
-            print("you have taken the following item with you --", item.get_name())
+            print("no such stuff: ", stuff)
 
     def remove(self, stuff):
         for x in self.item:
@@ -142,22 +154,34 @@ class Player:
         item = self.get_item(stuff)
         self.remove(item)
         self.room.add_item(item)
+        item.place = self.room.room_name
 
     def check_key(self):
-        for x in [x.get_name() for x in self.item]:
-            print(x)
-            if x == "Key":
+        for x in self.item:
+            if x.purpose == "unlock":
+                return True
+
+    def check_food(self):
+        for x in self.item:
+            if x.purpose == "eat":
                 return True
 
     def open(self, direction):
+        if self.room.get_door(direction).status == "closed" or self.room.get_door(direction).status == "unlocked":
+            self.room.get_door(direction).status = "open"
+            print("The door is open now, you can go through the door now")
+        elif self.room.get_door(direction).status == "locked":
+            print("The door is locked, try to find out the Key")
+
+    def unlock(self, direction):
         if self.check_key():
             print("(─‿‿─)")
             print("Got the key")
-            self.room.get_door(direction).status = "open"
-            self.go(direction)
+            self.room.get_door(direction).status = "unlocked"
+            print("The door is unlocked now, you can open it")
         else:
             print("(─‿‿─)")
-            print("try to find out the Key")
+            print("You dont have the key on you, try to find it")
 
     def get_commands(self):
         print("(─‿‿─)")
@@ -175,6 +199,14 @@ class Player:
     def holding(self):
         print("(─‿‿─)")
         print([x.get_name() for x in self.item])
+
+    def eat(self):
+        if self.check_food():
+            print("eating....")
+            self.status = "energetic"
+            print("the player's status is, ", self.status)
+        else:
+            print("no food at hand, please find some food")
 
     def take_action(self, command):
         action = command.split(" ")
@@ -195,6 +227,10 @@ class Player:
             self.open(action[1])
         elif act == "release":
             self.release(action[1])
+        elif act == "unlock":
+            self.unlock(action[1])
+        elif act == "eat":
+            self.eat()
 
 
 class Game:
@@ -265,7 +301,7 @@ class Game:
             elif item_config[2] == "STATIONARY":
                 new_item = StationaryStuff(name=item_config[0], place=item_config[1])
             elif item_config[2] == "USE":
-                new_item = UseStuff(name=item_config[0], place=item_config[1])
+                new_item = UseStuff(name=item_config[0], place=item_config[1], purpose=item_config[-1])
             item_list.append(new_item)
 
         for room in room_list.values():
@@ -306,4 +342,3 @@ if __name__ == "__main__":
 
     Game.print_config('startGame.txt')
     Game.start_game(file)
-

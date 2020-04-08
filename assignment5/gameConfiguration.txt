@@ -9,14 +9,15 @@ room Balcony
 #Doors
 door N1-S open LK ReadingRoom
 door N2-S open LK BedRoom1
-door N3-S open LK BedRoom2
-door E-W locked LK Bathroom
+door N3-S locked LK BedRoom2
+door E-W closed LK Bathroom
 door W-E open LK Balcony
 
 #Items
 item Macbook LK MOVE
-item TV  LK STATIONARY
-item Key LK USE
+item Sofa LK STATIONARY
+item Key LK USE unlock
+item Food LK USE eat
 
 #Start position
 start LK
