@@ -1,0 +1,146 @@
+🄻🄾🄲🄺🄳🄾🅆🄽 🄲🄾🅁🄾🄽🄰
+
+█░░ █▀█ █▀▀ █▄▀ █▀▄ █▀█ █░█░█ █▄░█   █▀▀ █▀█ █▀█ █▀█ █▄░█ ▄▀█
+█▄▄ █▄█ █▄▄ █░█ █▄▀ █▄█ ▀▄▀▄▀ █░▀█   █▄▄ █▄█ █▀▄ █▄█ █░▀█ █▀█
+
+Your City is locked down, and you have to stay at home....
+
++--------------------------+---------|--------|--------+---------------|-------------|----------+
+|                          |                           |                                        |
+_                          |                           |                                        |
+|       Reading Room       |        BedRoom 1          |                BedRoom 2               |
+|                          |                           |                                        |
+-                          |                           |                                        |
+|                          |                           |                                        |
++------------+-------------+---------------------------+----------------------------+-----------+
+|            |  +------+            +----------+                  +--------+        |           |
+|            |                                                                      |           |
+-            ++                                                                     |           |
+|            ||                                                                     |           |
+|            ||                                                                     |           |
+|            ||                                                                     |           |
+|            ||                                                                     |           |
+|   Balcony  ++                                                                     |   Bathroom|
+|            |                        Living room and kitchen                       |           |
+|            |                                (─‿‿─)                                |           |
+|            |                                                                     ++           |
+|            |                                                                     ||           |
+|            |                                                                     ||           |
+|            |                                                                     ||           |
+|            |                                                                     ++           |
+|            |                                                                      |           |
+|            |                                                                      |           |
++------------+----------------------------------------------------------------------+-----------+
+
+
+you are in the living room and kitchen.
+
+
+(─‿‿─)
+Please type some command：
+show
+(─‿‿─)
+You are now in ROOM LK
+Here are doors towords ['N1', 'N2', 'N3', 'E', 'W']
+The following items are in this room, ['Macbook', 'Sofa', 'Key', 'Food']
+go N1
+player's status is-- tired --you cannot move at all
+please eat something first
+eat
+no food at hand, please find some food
+take Food
+(─‿‿─)
+the following item: Food has been taken from the room: LK
+(─‿‿─)
+you have taken the following item with you -- Food
+eat
+eating....
+the player's status is,  energetic
+go N1
+Leave  LK
+(─‿‿─)
+Enter  ReadingRoom
+show
+(─‿‿─)
+You are now in ROOM ReadingRoom
+Here are doors towords ['S']
+The following items are in this room, []
+go S
+Leave  ReadingRoom
+(─‿‿─)
+Enter  LK
+go N3
+(─‿‿─)
+The door is closed, please try to open it.
+ಥ_ಥ
+open N3
+The door is locked, try to find out the Key
+unlock NE
+no such door in this room:  NE
+unlock N3
+(─‿‿─)
+You dont have the key on you, try to find it
+take Key
+(─‿‿─)
+the following item: Key has been taken from the room: LK
+(─‿‿─)
+you have taken the following item with you -- Key
+unlock N3
+(─‿‿─)
+Got the key
+The door is unlocked now, you can open it
+open N3
+The door is open now, you can go through the door now
+GO N3
+Leave  LK
+(─‿‿─)
+Enter  BedRoom2
+show
+(─‿‿─)
+You are now in ROOM BedRoom2
+Here are doors towords ['S']
+The following items are in this room, []
+go S
+Leave  BedRoom2
+(─‿‿─)
+Enter  LK
+go E
+(─‿‿─)
+The door is closed, please try to open it.
+ಥ_ಥ
+open E
+The door is open now, you can go through the door now
+go E
+Leave  LK
+(─‿‿─)
+Enter  Bathroom
+show
+(─‿‿─)
+You are now in ROOM Bathroom
+Here are doors towords ['W']
+The following items are in this room, []
+go W
+Leave  Bathroom
+(─‿‿─)
+Enter  LK
+holding
+(─‿‿─)
+['Food', 'Key']
+go W
+Leave  LK
+(─‿‿─)
+Enter  Balcony
+release Key
+(─‿‿─)
+the following item has been release -- Key
+the following item: Key has been placed in this room : Balcony
+show
+(─‿‿─)
+You are now in ROOM Balcony
+Here are doors towords ['E']
+The following items are in this room, ['Key']
+holding
+(─‿‿─)
+['Food']
+quit
+🄶🄰🄼🄴 🄾🅅🄴🅁 🄱🅄🅃 🅂🅃🄰🅈 🄷🄾🄼🄴
